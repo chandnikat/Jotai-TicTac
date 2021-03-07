@@ -10,12 +10,14 @@ const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8],
 
 const squaresAtom = atom(Array(9).fill(null));
 squaresAtom.debugLabel = "squaresAtom";
+
 const nextValueAtom = atom((get) =>
   get(squaresAtom).filter((r) => r === "O").length ===
   get(squaresAtom).filter((r) => r === "X").length
     ? "X"
     : "O"
 );
+nextValueAtom.debugLabel = "nextValueAtom";
 
 const winnerAtom = atom((get) => {
   for (let i = 0; i < lines.length; i++) {
@@ -29,10 +31,12 @@ const winnerAtom = atom((get) => {
   }
   return null;
 });
+winnerAtom.debugLabel = "winnerAtom";
 
 const resetSquaresAtom = atom(null, (_get, set) =>
   set(squaresAtom, Array(9).fill(null))
 );
+resetSquaresAtom.debugLabel = "resetSquaresAtom";
 
 const selectSquareAtom = atom(
   (get) => get(squaresAtom),
@@ -46,6 +50,8 @@ const selectSquareAtom = atom(
     );
   }
 );
+selectSquareAtom.debugLabel = "selectSquareAtom";
+
 const statusAtom = atom((get) => {
   return get(winnerAtom)
     ? `Winner: ${get(winnerAtom)}`
@@ -53,6 +59,7 @@ const statusAtom = atom((get) => {
     ? `Scratch`
     : `Next player: ${get(nextValueAtom)}`;
 });
+statusAtom.debugLabel = "statusAtom";
 
 function Square({ i }) {
   const [squares, selectSquare] = useAtom(selectSquareAtom);
